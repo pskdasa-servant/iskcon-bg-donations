@@ -311,9 +311,7 @@ gfgfg
         </div>
 
         
-      <button class="btn btn-sponsor" id="sponsor-btn" type="button">
-  🎁 Sponsor Now
-</button>
+     
 
 
 
@@ -472,10 +470,9 @@ gfgfg
       </div>
     </div>
 
-    <a href="https://payments.cashfree.com/your-book-link" class="btn btn-sponsor" id="sponsor-btn">
-      <span class="btn-icon" aria-hidden="true">🎁</span>
-      Sponsor Now
-    </a>
+     <button class="btn btn-sponsor" id="sponsor-btn" type="button">
+  🎁 Sponsor Now
+</button>
 
     <p class="sponsor-note">🔒 Secure payment • Tax-exempt under Section 80G • Digital receipt provided</p>
   </div>
@@ -806,12 +803,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const sponsorBtn = document.getElementById("sponsor-btn");
 
   if (!sponsorBtn) {
-    console.error("Sponsor button not found");
+    console.error("❌ Sponsor button not found");
     return;
   }
 
   sponsorBtn.addEventListener("click", async () => {
-    console.log("Sponsor button clicked");
+    console.log("✅ Sponsor button clicked");
 
     const language =
       document.getElementById("language-select")?.value || "english";
@@ -830,16 +827,22 @@ document.addEventListener("DOMContentLoaded", () => {
       const data = await response.json();
       console.log("Cloudflare response:", data);
 
-      if (!data.success) throw new Error("Backend error");
+      if (!data.success) {
+        throw new Error("Backend error");
+      }
 
+      // 🔥 TEMP redirect (replace with Cashfree order link later)
       alert(
         `Language: ${data.language}\n` +
         `Books: ${data.quantity}\n` +
         `Amount: ₹${data.amount}`
       );
 
+      // Example redirect (later)
+      // window.location.href = data.payment_link;
+
     } catch (err) {
-      console.error(err);
+      console.error("❌ Error:", err);
       alert("Something went wrong. Please try again.");
     } finally {
       sponsorBtn.disabled = false;
