@@ -309,10 +309,13 @@
           <p class="price-note">Special temple seva price • Free shipping across India</p>
         </div>
 
-        <a href="https://payments.cashfree.com/forms/iskcontptvbc" class="btn btn-purchase">
+        <!--<a href="https://payments.cashfree.com/forms/iskcontptvbc" class="btn btn-purchase">
           <span class="btn-icon" aria-hidden="true">🛒</span>
           Purchase Now
-        </a>
+        </a>-->
+
+
+        <button class="btn btn-sponsor" id="sponsor-btn" type="button"> </button>
 
         <p class="secure-badge">🔒 Secure payment • 100% authentic edition</p>
       </div>
@@ -792,5 +795,57 @@ const preloadImage = (url) => {
 preloadImage('deity.png');
 </script>
 
+<script>
+/* ===============================
+   CLOUDFLARE BACKEND INTEGRATION
+   =============================== */
+
+const API_URL = "https://iskcon-tirupati-backend.pskdasa.workers.dev";
+
+const sponsorBtn = document.getElementById("sponsor-btn");
+
+sponsorBtn.addEventListener("click", async function () {
+  const language = document.getElementById("language-select").value || "english";
+  const quantity = selectedQuantity;
+
+  sponsorBtn.disabled = true;
+  sponsorBtn.textContent = "Processing...";
+
+  try {
+    const response = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        quantity: quantity,
+        language: language
+      })
+    });
+
+    const data = await response.json();
+
+    if (!data.success) {
+      throw new Error("Backend error");
+    }
+
+    console.log("Cloudflare response:", data);
+
+    // TEMP: show result (Cashfree next step)
+    alert(
+      `Language: ${data.language}\n` +
+      `Books: ${data.quantity}\n` +
+      `Amount: ₹${data.amount}`
+    );
+
+  } catch (err) {
+    console.error(err);
+    alert("Something went wrong. Please try again.");
+  } finally {
+    sponsorBtn.disabled = false;
+    sponsorBtn.textContent = "Sponsor Now";
+  }
+});
+</script>
+
+    
 </body>
 </html>
