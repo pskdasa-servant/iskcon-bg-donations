@@ -130,7 +130,7 @@
     </div>
   </div>
 </section>
-gfgfg
+
 <!-- CONTEST WINNERS SECTION -->
 <section class="contest-winners">
   <div class="container">
@@ -793,10 +793,6 @@ preloadImage('deity.png');
 </script>
 
 <script>
-/* ===============================
-   CLOUDFLARE BACKEND INTEGRATION
-   =============================== */
-
 const API_URL = "https://iskcon-tirupati-backend.pskdasa.workers.dev";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -812,6 +808,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const language =
       document.getElementById("language-select")?.value || "english";
+
     const quantity = window.selectedQuantity || 1;
 
     sponsorBtn.disabled = true;
@@ -825,28 +822,22 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       const data = await response.json();
-      console.log("Cloudflare response:", data);
+      console.log("✅ Cloudflare response:", data);
 
-      if (!data.success) {
-        throw new Error("Backend error");
-      }
+      if (!data.success) throw new Error("Backend error");
 
-      // 🔥 TEMP redirect (replace with Cashfree order link later)
       alert(
         `Language: ${data.language}\n` +
         `Books: ${data.quantity}\n` +
         `Amount: ₹${data.amount}`
       );
 
-      // Example redirect (later)
-      // window.location.href = data.payment_link;
-
     } catch (err) {
       console.error("❌ Error:", err);
       alert("Something went wrong. Please try again.");
     } finally {
       sponsorBtn.disabled = false;
-      sponsorBtn.textContent = "Sponsor Now";
+      sponsorBtn.textContent = "🎁 Sponsor Now";
     }
   });
 });
