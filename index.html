@@ -613,203 +613,88 @@
   </div>
 </footer>
 
-
 <script>
-// Mobile menu toggle
+/* ================= GLOBAL STATE ================= */
+window.selectedQuantity = 1;
+window.selectedAmount = 400;
+
+/* ================= MOBILE MENU ================= */
 const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
 const nav = document.querySelector('.nav');
 
-mobileMenuBtn.addEventListener('click', function() {
-  const isActive = this.classList.toggle('active');
-  nav.classList.toggle('active');
-  this.setAttribute('aria-expanded', isActive);
-});
-
-// Language card selection
-document.querySelectorAll('.language-card').forEach(card => {
-  const selectLanguage = (lang) => {
-    document.getElementById('language-select').value = lang;
-    document.querySelectorAll('.language-card').forEach(c => c.classList.remove('selected'));
-    card.classList.add('selected');
-  };
-  
-  card.addEventListener('click', function() {
-    selectLanguage(this.dataset.lang);
-  });
-  
-  // Keyboard accessibility
-  card.addEventListener('keypress', function(e) {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      selectLanguage(this.dataset.lang);
-    }
-  });
-});
-
-// Book Sponsorship quantity selection
-let selectedQuantity = 1;
-let selectedAmount = 400;
-
-const updateSponsorshipDisplay = (quantity, amount) => {
-  selectedQuantity = quantity;
-  selectedAmount = amount;
-  document.getElementById('selected-books').textContent = quantity;
-  document.getElementById('total-amount').textContent = amount.toLocaleString('en-IN');
-  
-  // Update the payment link with the amount
-  const sponsorBtn = document.getElementById('sponsor-btn');
-  sponsorBtn.href = `https://payments.cashfree.com/your-book-link?amount=${amount}&quantity=${quantity}`;
-};
-
-// Preset quantity buttons
-document.querySelectorAll('.quantity-btn').forEach(btn => {
-  btn.addEventListener('click', function() {
-    document.querySelectorAll('.quantity-btn').forEach(b => b.classList.remove('active'));
-    this.classList.add('active');
-    
-    const quantity = parseInt(this.dataset.quantity);
-    const amount = parseInt(this.dataset.amount);
-    
-    updateSponsorshipDisplay(quantity, amount);
-    
-    // Clear custom input
-    document.getElementById('custom-books').value = '';
-  });
-});
-
-// Custom quantity input
-const customBooksInput = document.getElementById('custom-books');
-const calculatedPrice = document.getElementById('calculated-price');
-
-customBooksInput.addEventListener('input', function() {
-  const quantity = parseInt(this.value) || 0;
-  const amount = quantity * 400;
-  
-  calculatedPrice.textContent = amount.toLocaleString('en-IN');
-  
-  if (quantity > 0) {
-    // Deselect preset buttons
-    document.querySelectorAll('.quantity-btn').forEach(b => b.classList.remove('active'));
-    updateSponsorshipDisplay(quantity, amount);
-  }
-});
-
-// Initialize with first option selected
-document.querySelector('.quantity-btn').click();
-
-// Smooth scroll for anchor links
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-  anchor.addEventListener('click', function(e) {
-    e.preventDefault();
-    const target = document.querySelector(this.getAttribute('href'));
-    if (target) {
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      // Close mobile menu if open
-      nav.classList.remove('active');
-      mobileMenuBtn.classList.remove('active');
-      mobileMenuBtn.setAttribute('aria-expanded', 'false');
-    }
-  });
-});
-
-// Header scroll effect
-let lastScroll = 0;
-window.addEventListener('scroll', () => {
-  const currentScroll = window.pageYOffset;
-  const header = document.querySelector('.header');
-  
-  if (currentScroll > 100) {
-    header.classList.add('scrolled');
-  } else {
-    header.classList.remove('scrolled');
-  }
-  
-  lastScroll = currentScroll;
-});
-
-// Counter animation for statistics
-const animateCounter = (element, target, duration = 2000) => {
-  const start = 0;
-  const increment = target / (duration / 16);
-  let current = 0;
-  
-  const timer = setInterval(() => {
-    current += increment;
-    if (current >= target) {
-      element.textContent = target;
-      clearInterval(timer);
-    } else {
-      element.textContent = Math.floor(current);
-    }
-  }, 16);
-};
-
-// Intersection Observer for counter animation
-const counterObserver = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      const target = parseInt(entry.target.dataset.count);
-      animateCounter(entry.target, target);
-      counterObserver.unobserve(entry.target);
-    }
-  });
-}, { threshold: 0.5 });
-
-document.querySelectorAll('.stat-number').forEach(counter => {
-  counterObserver.observe(counter);
-});
-
-// Scroll reveal animation
-const revealObserver = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('revealed');
-    }
-  });
-}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-
-document.querySelectorAll('.testimonial-card, .donation-card, .language-card, .contact-item').forEach(el => {
-  el.classList.add('reveal-on-scroll');
-  revealObserver.observe(el);
-});
-
-// Form submission handling
-const contactForm = document.querySelector('.contact-form');
-if (contactForm) {
-  contactForm.addEventListener('submit', function(e) {
-    // Let Netlify handle the submission
-    const submitBtn = this.querySelector('button[type="submit"]');
-    submitBtn.textContent = 'Sending...';
-    submitBtn.disabled = true;
+if (mobileMenuBtn) {
+  mobileMenuBtn.addEventListener('click', function () {
+    const isActive = this.classList.toggle('active');
+    nav.classList.toggle('active');
+    this.setAttribute('aria-expanded', isActive);
   });
 }
 
-// Preload critical images
-const preloadImage = (url) => {
-  const img = new Image();
-  img.src = url;
-};
-preloadImage('deity.png');
-</script>
+/* ================= LANGUAGE CARD SELECTION ================= */
+document.querySelectorAll('.language-card').forEach(card => {
+  card.addEventListener('click', () => {
+    document.getElementById('language-select').value = card.dataset.lang;
+    document.querySelectorAll('.language-card').forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
+  });
+});
 
+/* ================= QUANTITY BUTTONS ================= */
+document.querySelectorAll('.quantity-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.quantity-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    window.selectedQuantity = parseInt(btn.dataset.quantity);
+    window.selectedAmount = parseInt(btn.dataset.amount);
+
+    document.getElementById('selected-books').textContent = window.selectedQuantity;
+    document.getElementById('total-amount').textContent =
+      window.selectedAmount.toLocaleString('en-IN');
+  });
+});
+
+/* Auto-select first quantity */
+const firstQty = document.querySelector('.quantity-btn');
+if (firstQty) firstQty.click();
+
+/* ================= CUSTOM QUANTITY ================= */
+const customBooksInput = document.getElementById('custom-books');
+const calculatedPrice = document.getElementById('calculated-price');
+
+if (customBooksInput) {
+  customBooksInput.addEventListener('input', () => {
+    const qty = parseInt(customBooksInput.value) || 0;
+    const amount = qty * 400;
+
+    calculatedPrice.textContent = amount.toLocaleString('en-IN');
+
+    if (qty > 0) {
+      window.selectedQuantity = qty;
+      window.selectedAmount = amount;
+      document.getElementById('selected-books').textContent = qty;
+      document.getElementById('total-amount').textContent =
+        amount.toLocaleString('en-IN');
+    }
+  });
+}
+</script>
 <script>
 const API_URL = "https://iskcon-tirupati-backend.pskdasa.workers.dev";
 
-document.addEventListener("DOMContentLoaded", () => {
-  const sponsorBtn = document.getElementById("sponsor-btn");
+const sponsorBtn = document.getElementById("sponsor-btn");
 
-  if (!sponsorBtn) {
-    console.error("❌ Sponsor button not found");
-    return;
-  }
-
+if (!sponsorBtn) {
+  console.error("❌ Sponsor button not found");
+} else {
   sponsorBtn.addEventListener("click", async () => {
     console.log("✅ Sponsor button clicked");
 
     const language =
       document.getElementById("language-select")?.value || "english";
 
-    const quantity = window.selectedQuantity || 1;
+    const quantity = window.selectedQuantity;
+    const amount = window.selectedAmount;
 
     sponsorBtn.disabled = true;
     sponsorBtn.textContent = "Processing...";
@@ -818,19 +703,24 @@ document.addEventListener("DOMContentLoaded", () => {
       const response = await fetch(API_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ quantity, language })
+        body: JSON.stringify({ language, quantity, amount })
       });
 
       const data = await response.json();
-      console.log("✅ Cloudflare response:", data);
+      console.log("✅ Backend response:", data);
 
-      if (!data.success) throw new Error("Backend error");
+      if (!data.success) {
+        throw new Error("Backend returned error");
+      }
 
       alert(
         `Language: ${data.language}\n` +
         `Books: ${data.quantity}\n` +
         `Amount: ₹${data.amount}`
       );
+
+      // 🔜 NEXT STEP
+      // window.location.href = data.payment_link;
 
     } catch (err) {
       console.error("❌ Error:", err);
@@ -840,8 +730,9 @@ document.addEventListener("DOMContentLoaded", () => {
       sponsorBtn.textContent = "🎁 Sponsor Now";
     }
   });
-});
+}
 </script>
+
 
 
     
