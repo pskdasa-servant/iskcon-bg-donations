@@ -470,7 +470,7 @@
       </div>
     </div>
 
-     <button class="btn btn-sponsor" id="sponsor-btn" type="button">
+     <button class="btn btn-sponsor" id="sponsor-btn" onclick="handleClick()" type="button">
   🎁 Sponsor Now
 </button>
 
@@ -680,14 +680,12 @@ if (customBooksInput) {
 }
 </script>
 <script>
-const API_URL = "https://iskcon-tirupati-backend.pskdasa.workers.dev";
 
-const sponsorBtn = document.getElementById("sponsor-btn");
+</script>
+function handleclick() {
+    const API_URL = "https://iskcon-tirupati-backend.pskdasa.workers.dev";
 
-if (!sponsorBtn) {
-  console.error("❌ Sponsor button not found");
-} else {
-  sponsorBtn.addEventListener("click", async () => {
+    const sponsorBtn = document.getElementById("sponsor-btn");
     console.log("✅ Sponsor button clicked");
 
     const language =
@@ -729,7 +727,7 @@ if (!sponsorBtn) {
       sponsorBtn.disabled = false;
       sponsorBtn.textContent = "🎁 Sponsor Now";
     }
-  });
+  
 }
 </script>
 
